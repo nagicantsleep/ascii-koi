@@ -2,16 +2,18 @@
 
 import { useEffect, useRef } from "react";
 import { OceanEngine } from "./engine";
-import type { SharkSpec } from "./world";
+import type { KoiSpec, SharkSpec } from "./world";
 
 /** Glyphs come from the canvas's font-family, so give it (or a parent) a monospace font. */
-export function AsciiOcean({ className, sharks }: { className?: string; sharks?: SharkSpec[] }) {
+export function AsciiOcean(
+  { className, kois, sharks }: { className?: string; kois?: KoiSpec[]; /** @deprecated Use kois. */ sharks?: SharkSpec[] },
+) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const engine = new OceanEngine(canvas, sharks);
+    const engine = new OceanEngine(canvas, kois ?? sharks);
     return () => engine.destroy();
     // The roster is fixed for the life of the canvas.
     // eslint-disable-next-line react-hooks/exhaustive-deps

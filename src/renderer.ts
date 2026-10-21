@@ -7,7 +7,7 @@
  *      shaded by the light, dense glyphs, and shimmering accent colours
  */
 import { clamp, hash3, smoothstep } from "./math";
-import { SHARK_NODES, type Shark, type SharkKind, type World } from "./world";
+import { SHARK_NODES, type Shark, type KoiKind, type World } from "./world";
 
 const ALPHA_LEVELS = 6;
 const FISH_ALPHAS = [0.28, 0.42, 0.58, 0.74, 0.9];
@@ -80,8 +80,8 @@ interface SharkShape {
   tint: [number, number, number];
 }
 
-const SHAPES: Record<SharkKind, SharkShape> = {
-  classic: {
+const SHAPES: Record<KoiKind, SharkShape> = {
+  kohaku: {
     halfWidth: classicHalfWidth,
     pectoral: [0.15, 0.43, 0.55, 0.26],
     falcate: true,
@@ -95,7 +95,7 @@ const SHAPES: Record<SharkKind, SharkShape> = {
   },
   // Slim neck under a wide, swept-back cephalofoil (drawn in sampleShark),
   // tall first dorsal, long upper tail lobe. Bronze-olive grey.
-  hammerhead: {
+  taisho: {
     halfWidth: (s) => {
       if (s < 0.06) return 0.045;
       if (s < 0.3) return 0.045 + 0.061 * smoothstep(0.06, 0.3, s);
@@ -113,7 +113,7 @@ const SHAPES: Record<SharkKind, SharkShape> = {
     tint: [0.96, 0.98, 0.9],
   },
   // Blunt, square snout on a heavy body; barred back. Warm grey-brown.
-  tiger: {
+  showa: {
     halfWidth: (s) => {
       if (s < 0.13) return 0.1 * Math.pow(Math.sin(((s / 0.13) * Math.PI) / 2), 0.45);
       if (s < 0.3) return 0.1 + 0.014 * smoothstep(0.13, 0.3, s);
@@ -133,7 +133,7 @@ const SHAPES: Record<SharkKind, SharkShape> = {
   },
   // Short rounded head, body done by half-length, then a long ribbon of a
   // tail fin. Broad rounded pectorals, spotted sandy skin.
-  zebra: {
+  asagi: {
     halfWidth: (s) => {
       if (s < 0.1) return 0.075 * Math.pow(Math.sin(((s / 0.1) * Math.PI) / 2), 0.7);
       if (s < 0.28) return 0.075 + 0.025 * smoothstep(0.1, 0.28, s);
@@ -153,7 +153,7 @@ const SHAPES: Record<SharkKind, SharkShape> = {
   },
   // Great hammerhead: a broader, nearly straight-edged cephalofoil with a notch at the centre,
   // a towering sickle first dorsal (drawn long and bright from above), and a cooler slate skin.
-  greathammer: {
+  bekko: {
     halfWidth: (s) => {
       if (s < 0.05) return 0.04;
       if (s < 0.3) return 0.04 + 0.07 * smoothstep(0.05, 0.3, s);
@@ -172,7 +172,7 @@ const SHAPES: Record<SharkKind, SharkShape> = {
   },
   // Shortfin mako: a long conical snout, a torpedo body that narrows hard to the tail stalk,
   // and a tall crescent tail. Metallic indigo back.
-  mako: {
+  ogon: {
     halfWidth: (s) => {
       if (s < 0.17) return 0.088 * Math.pow(Math.sin(((s / 0.17) * Math.PI) / 2), 1.5);
       if (s < 0.32) return 0.088 + 0.012 * smoothstep(0.17, 0.32, s);
@@ -192,7 +192,7 @@ const SHAPES: Record<SharkKind, SharkShape> = {
   },
   // Thresher: a compact body over the front half, then the upper tail lobe as a long whip
   // that's as long as the shark itself. Big eyes, long sickle pectorals, bronze-violet skin.
-  thresher: {
+  utsuri: {
     halfWidth: (s) => {
       if (s < 0.08) return 0.07 * Math.pow(Math.sin(((s / 0.08) * Math.PI) / 2), 0.75);
       if (s < 0.2) return 0.07 + 0.02 * smoothstep(0.08, 0.2, s);
@@ -213,7 +213,7 @@ const SHAPES: Record<SharkKind, SharkShape> = {
   },
   // Nurse shark: a blunt, broad head, a heavy flattened body with both dorsals set far back,
   // rounded paddle pectorals, and a long low tail with no lower lobe. Tawny brown.
-  nurse: {
+  shusui: {
     halfWidth: (s) => {
       if (s < 0.08) return 0.085 * Math.pow(Math.sin(((s / 0.08) * Math.PI) / 2), 0.4);
       if (s < 0.3) return 0.085 + 0.02 * smoothstep(0.08, 0.3, s);
@@ -233,7 +233,7 @@ const SHAPES: Record<SharkKind, SharkShape> = {
   },
 };
 
-const KINDS = Object.keys(SHAPES) as SharkKind[];
+const KINDS = Object.keys(SHAPES) as KoiKind[];
 
 function inTriangle(
   px: number, py: number,
@@ -299,7 +299,7 @@ export class AsciiRenderer {
   private spine = new Float32Array(SHARK_NODES * 2);
   private arc = new Float32Array(SHARK_NODES);
   private arcTotal = 1;
-  private shape = SHAPES.classic;
+  private shape = SHAPES.kohaku;
   private sharkId = 0;
   private finTipLeft = 0;
   private finTipRight = 0;
@@ -577,7 +577,7 @@ export class AsciiRenderer {
       } else if (s < 0.05) {
         // Pale snout tip.
         shade = Math.max(shade, 0.7);
-      } else if (shape === SHAPES.zebra && s > 0.08 && s < 0.55 && (across < 0.1 || Math.abs(across - 0.6) < 0.08)) {
+      } else if (shape === SHAPES.asagi && s > 0.08 && s < 0.55 && (across < 0.1 || Math.abs(across - 0.6) < 0.08)) {
         // Zebra sharks carry pale ridges down the back.
         shade = Math.max(shade, 0.8);
       } else if (this.marked(s, a * bestSign, L, across)) {
@@ -614,14 +614,14 @@ export class AsciiRenderer {
 
   /** Whether a body point (s along, v across) falls on a dark marking. */
   private marked(s: number, v: number, L: number, across: number) {
-    if (this.shape === SHAPES.tiger) {
+    if (this.shape === SHAPES.showa) {
       // Wavy vertical bars over the back half, fading out toward the head.
       if (s < 0.2 || s > 0.9 || across > 0.85) return false;
       const wobble = 0.35 * Math.sin((v / L) * 25 + s * 5);
       const bar = Math.sin(s * Math.PI * 2 * 9 + wobble);
       return bar > 0.65 - 0.5 * smoothstep(0.2, 0.42, s) + 0.4 * smoothstep(0.8, 0.9, s);
     }
-    if (this.shape === SHAPES.zebra) {
+    if (this.shape === SHAPES.asagi) {
       // Leopard spots on a jittered grid, so they ride along with the skin.
       if (s < 0.07) return false;
       const gu = (s * L) / (L * 0.06);

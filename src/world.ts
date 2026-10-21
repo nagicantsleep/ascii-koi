@@ -18,17 +18,21 @@ import { pickSpecies, SPECIES } from "./species";
 
 export const SHARK_NODES = 20;
 
-export type SharkKind = "classic" | "hammerhead" | "zebra" | "tiger" | "greathammer" | "mako" | "thresher" | "nurse";
+export type KoiKind = "kohaku" | "taisho" | "asagi" | "showa" | "bekko" | "ogon" | "utsuri" | "shusui";
+/** @deprecated Use KoiKind. */
+export type SharkKind = KoiKind;
 
-/** Which sharks to put in the water; size is relative to the biggest. */
-export type SharkSpec = { kind: SharkKind; size: number };
+/** Which koi to put in the water; size is relative to the biggest. */
+export type KoiSpec = { kind: KoiKind; size: number };
+/** @deprecated Use KoiSpec. */
+export type SharkSpec = KoiSpec;
 
-// The landing hero: four of the same shark at different depths.
-const DEFAULT_SHARKS: SharkSpec[] = [
-  { kind: "classic", size: 1 },
-  { kind: "classic", size: 0.7 },
-  { kind: "classic", size: 0.84 },
-  { kind: "classic", size: 0.77 },
+// The landing hero: four koi at different depths.
+const DEFAULT_KOI: KoiSpec[] = [
+  { kind: "kohaku", size: 1 },
+  { kind: "kohaku", size: 0.7 },
+  { kind: "kohaku", size: 0.84 },
+  { kind: "kohaku", size: 0.77 },
 ];
 
 export interface Fish {
@@ -53,7 +57,7 @@ export interface Fish {
 
 export interface Shark {
   id: number;
-  kind: SharkKind;
+  kind: KoiKind;
   length: number;
   /** Spine positions, snout first: [x0, y0, x1, y1, ...]. */
   nodes: Float32Array;
@@ -110,7 +114,7 @@ export class World {
 
   /** fishCount overrides the area-based population (the sidebar wants a single small school). */
   constructor(
-    private sharkSpecs: SharkSpec[] = DEFAULT_SHARKS,
+    private koiSpecs: KoiSpec[] = DEFAULT_KOI,
     private fishCount?: number,
   ) {}
 
@@ -138,11 +142,11 @@ export class World {
     const { width: W, height: H } = this;
     const minSide = Math.min(W, H);
     const baseLength = clamp(minSide * 0.44, 170, 430);
-    const sharkCount = this.sharkSpecs.length;
+    const sharkCount = this.koiSpecs.length;
 
     this.sharks = [];
     for (let i = 0; i < sharkCount; i++) {
-      const { kind, size } = this.sharkSpecs[i];
+      const { kind, size } = this.koiSpecs[i];
       const length = baseLength * size;
       const orbitRadius = minSide * rand(0.28, 0.4);
       const a = (i / sharkCount) * TAU + rand(-0.4, 0.4);
