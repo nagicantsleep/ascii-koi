@@ -23,3 +23,13 @@ import { OceanEngine } from "./src";
 
 const engine = new OceanEngine(canvas, [{ kind: "kohaku", size: 1 }]);
 ```
+
+## Proof
+
+Short run recording:
+
+- [Video proof (MP4)](./proof/ascii-koi-proof.mp4)
+
+Preview:
+
+![ascii-koi proof](./proof/ascii-koi-proof.gif)
