@@ -1,5 +1,5 @@
 import { AsciiRenderer } from "./renderer";
-import { World, type SharkSpec } from "./world";
+import { World, type KoiSpec } from "./world";
 
 const STEP = 1 / 60;
 const MAX_STEPS = 4;
@@ -20,8 +20,8 @@ export class OceanEngine {
   private intersectionObserver: IntersectionObserver;
   private disposed = false;
 
-  constructor(private canvas: HTMLCanvasElement, sharks?: SharkSpec[]) {
-    this.world = new World(sharks);
+  constructor(private canvas: HTMLCanvasElement, kois?: KoiSpec[]) {
+    this.world = new World(kois);
     this.renderer = new AsciiRenderer(canvas);
     this.renderer.setFontFamily(getComputedStyle(canvas).fontFamily);
     this.reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");

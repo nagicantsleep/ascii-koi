@@ -1,7 +1,7 @@
-import { OceanEngine, type SharkKind, type SharkSpec } from "./src";
+import { OceanEngine, type KoiKind, type KoiSpec } from "./src";
 
-// ?sharks=thresher,hammerhead,mako,nurse — first is biggest, the rest step down. No param: four classics.
-const kinds = new URLSearchParams(location.search).get("sharks")?.split(",").filter(Boolean) as SharkKind[] | undefined;
-const sharks: SharkSpec[] | undefined = kinds?.map((kind, i) => ({ kind, size: 1 - i * 0.1 }));
+// ?koi=kohaku,showa,ogon,asagi — first is biggest, the rest step down. No param: four kohaku.
+const kinds = new URLSearchParams(location.search).get("koi")?.split(",").filter(Boolean) as KoiKind[] | undefined;
+const kois: KoiSpec[] | undefined = kinds?.map((kind, i) => ({ kind, size: 1 - i * 0.1 }));
 
-new OceanEngine(document.querySelector("canvas")!, sharks);
+new OceanEngine(document.querySelector("canvas")!, kois);
